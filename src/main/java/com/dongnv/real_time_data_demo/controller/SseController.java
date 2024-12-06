@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RequestMapping("/sse-server")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class JokeController {
+public class SseController {
     FetchDataService fetchDataService;
 
     // CopyOnWriteArrayList là một triển khai của List, lớp này thiết kế đặc biệt để sử dụng trong
