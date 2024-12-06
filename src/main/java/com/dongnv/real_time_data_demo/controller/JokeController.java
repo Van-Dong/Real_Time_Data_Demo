@@ -43,6 +43,8 @@ public class JokeController {
                         .build());
     }
 
+
+    // Cái này t chưa biết cách cấu hình nó là ServerSentEvent (nếu là clas này thì ta có thể cấu hình 1 số thông số cho sự kiện)
     @CrossOrigin(origins = "*")
     @GetMapping(value = "/sse-with-fetch-data", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<RandomDataFromInternet> fetchJokes() {  // Dành cho giá trị Async (như Mono, Flux)
