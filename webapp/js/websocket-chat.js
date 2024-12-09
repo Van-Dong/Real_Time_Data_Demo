@@ -14,12 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const socket = new SockJS('http://localhost:8080/ws'); // Cập nhật URL theo server của bạn
         stompClient = Stomp.over(socket);
 
+        // stompClient.connect(headers, onConnect, onError)  {onConnect là hàm sẽ gọi khi kết nối thành công)
         stompClient.connect({}, () => {
             connectingElement.classList.add('hidden');
             stompClient.subscribe('/topic/public', onMessageReceived); // đăng ký topic
             stompClient.send('/app/addUser', {}, JSON.stringify({sender: username, type: 'JOIN'})); // // Phải Stringify bởi STOMP chỉ hỗ trợ text
         }, onError);
     };
+
 
     // Xử lý error khi không thể kết nối tới WebSocker server
     const onError = (error) => {
@@ -48,40 +50,39 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Hàm tạo phần tử tin nhắn
-function createMessage(sender, message) {
-    // Tạo một phần tử <li> cho tin nhắn
-    const messageItem = document.createElement('li');
-    messageItem.classList.add('message-item');
-  
-    // Tạo phần tử avatar chứa chữ cái đầu tiên của người gửi
-    const avatar = document.createElement('div');
-    avatar.classList.add('avatar');
-    avatar.textContent = sender.charAt(0).toUpperCase(); // Lấy chữ cái đầu tiên của tên sender và viết hoa
-  
-    // Tạo phần tử message để chứa tên người gửi và tin nhắn
-    const messageContent = document.createElement('div');
-    messageContent.classList.add('message');
-  
-    const name = document.createElement('span');
-    name.classList.add('name');
-    name.textContent = sender; // Gán tên người gửi
-  
-    const text = document.createElement('span');
-    text.classList.add('text');
-    text.textContent = message; // Gán tin nhắn
-  
-    // Thêm name và text vào messageContent
-    messageContent.appendChild(name);
-    messageContent.appendChild(text);
-  
-    // Thêm avatar và messageContent vào messageItem
-    messageItem.appendChild(avatar);
-    messageItem.appendChild(messageContent);
-  
-    // Thêm messageItem vào messageArea
-    messageArea.appendChild(messageItem);
-  }
-  
+    const  createMessage = (sender, message) => {
+        // Tạo một phần tử <li> cho tin nhắn
+        const messageItem = document.createElement('li');
+        messageItem.classList.add('message-item');
+
+        // Tạo phần tử avatar chứa chữ cái đầu tiên của người gửi
+        const avatar = document.createElement('div');
+        avatar.classList.add('avatar');
+        avatar.textContent = sender.charAt(0).toUpperCase(); // Lấy chữ cái đầu tiên của tên sender và viết hoa
+
+        // Tạo phần tử message để chứa tên người gửi và tin nhắn
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message');
+
+        const name = document.createElement('span');
+        name.classList.add('name');
+        name.textContent = sender; // Gán tên người gửi
+
+        const text = document.createElement('span');
+        text.classList.add('text');
+        text.textContent = message; // Gán tin nhắn
+
+        // Thêm name và text vào messageContent
+        messageContent.appendChild(name);
+        messageContent.appendChild(text);
+
+        // Thêm avatar và messageContent vào messageItem
+        messageItem.appendChild(avatar);
+        messageItem.appendChild(messageContent);
+
+        // Thêm messageItem vào messageArea
+        messageArea.appendChild(messageItem);
+    }
 
 
     // Hàm Xử lý sự kiện các message truyền đến từ server đến nó
@@ -97,7 +98,7 @@ function createMessage(sender, message) {
             textElement.textContent = message.content;
             messageElement.appendChild(textElement);
             messageArea.appendChild(messageElement);
-        } else if (message.type === 'CHAT') { 
+        } else if (message.type === 'CHAT') {
             createMessage(message.sender, message.content)
         } else if (message.type === 'LEAVE') {
             messageElement.classList.add('event-message');
