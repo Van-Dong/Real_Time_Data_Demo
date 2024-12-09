@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RandomDataFromInternet {
+public class RandomDataFromInternet { // For SSE
     String value;
 }
